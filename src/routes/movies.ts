@@ -1,39 +1,21 @@
 import { Hono } from "hono";
-import { Movie } from "../types/types";
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { Movie, PrismaClient } from "@prisma/client";
 
-const movies: Movie[] = [];
+const prisma = new PrismaClient();
 
-export const moviesRoute = new OpenAPIHono();
+type MovieCreateInput = Omit<Movie, "id">;
 
-moviesRoute.get("/", (c) => {
+export const moviesRoute = new Hono();
+
+moviesRoute.get("/", async (c) => {
+  const movies = await prisma.movie.findMany();
   return c.json(movies);
 });
 
-moviesRoute.openapi(
-  createRoute({
-    method: "get",
-    path: "/",
-    responses: {
-      200: {
-        description: "Respond a message",
-        content: {
-          "application/json": {
-            schema: z.array(z.object({ name: z.string(), year: z.number() })),
-          },
-        },
-      },
-    },
-  }),
-  (c) => {
-    return c.json(movies);
-  },
-);
-
 moviesRoute.post("/", async (c) => {
   const body = await c.req.json();
-  const { name, year } = body;
-  const movie: Movie = { name, year, updatedAt: new Date() };
-  movies.push(movie);
+  const { title, description, releaseYear } = body;
+  const movie: MovieCreateInput = { title, description, releaseYear, updatedAt: new Date() };
+  await prisma.movie.create({ data: movie });
   return c.json(movie);
 });

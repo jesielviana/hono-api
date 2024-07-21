@@ -3,30 +3,22 @@ import { logger } from "hono/logger";
 import { moviesRoute } from "./routes/movies";
 import { cors } from "hono/cors";
 import { swaggerUI } from "@hono/swagger-ui";
-import { OpenAPIHono } from "@hono/zod-openapi";
 
-const app = new OpenAPIHono();
+import swagger from "../swagger.json";
 
-app.get(
-  "/ui",
-  swaggerUI({
-    url: "/doc",
-  }),
-);
+const app = new Hono().basePath("/api").route("/movies", moviesRoute);
 
-app.doc("/doc", {
-  info: {
-    title: "An API",
-    version: "v1",
-  },
-  openapi: "3.1.0",
-});
+app.get("/doc", swaggerUI({ url: "/api/swagger" }));
 
 app.use(cors());
 app.use(logger());
 
 app.get("/", (c) => {
   return c.text("Api Online!");
+});
+
+app.get("/swagger", (c) => {
+  return c.json(swagger);
 });
 
 app.notFound((c) => {
@@ -37,7 +29,5 @@ app.onError((err, c) => {
   console.error(`${err}`);
   return c.text("Erro interno", 500);
 });
-
-app.route("/movies", moviesRoute);
 
 export default app;
