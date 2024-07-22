@@ -7,6 +7,6 @@ echo "Setup/update Prisma"
 bun run prisma
 echo "copy env"
 cp .env.example  .env
-echo "Restart service"
-sudo systemctl restart hono-api
+echo "Bun deploy"
+bun run deploy
 echo "finished!"

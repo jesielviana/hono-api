@@ -19,5 +19,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          echo 'DATABASE_URL='+$DATABASE_URL | sudo tee /etc/DATABASE_URL_ENV
           sh deploy.sh
