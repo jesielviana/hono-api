@@ -14,6 +14,8 @@ jobs:
     environment:
       name: ovhcloud
       url: "http://vps-8510d443.vps.ovh.net/api"
+    env:
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
     steps:
       - uses: actions/checkout@v3
       - run: |
