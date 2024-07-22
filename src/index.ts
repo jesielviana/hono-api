@@ -6,29 +6,36 @@ import { swaggerUI } from "@hono/swagger-ui";
 
 import swagger from "../swagger.json";
 
-const app = new Hono().basePath("/api").route("/movies", moviesRoute);
+const home = new Hono();
+home.get("/", (c) => c.html("<h1>API de Filmes</h1>"));
 
-app.get("/doc", swaggerUI({ url: "/api/swagger" }));
+const api = new Hono().basePath("/api");
+api.use(cors());
+api.use(logger());
 
-app.use(cors());
-app.use(logger());
-
-app.get("/", (c) => {
+api.get("/", (c) => {
   return c.text("Api Online!");
 });
 
-app.get("/swagger", (c) => {
+api.get("/doc", swaggerUI({ url: "/api/swagger" }));
+api.get("/swagger", (c) => {
   return c.json(swagger);
 });
 
-app.notFound((c) => {
+api.notFound((c) => {
   return c.text("Rota inválida", 404);
 });
 
-app.onError((err, c) => {
+api.onError((err, c) => {
   console.error(`${err}`);
   return c.text("Erro interno", 500);
 });
+
+api.route("/movies", moviesRoute);
+
+const app = new Hono();
+app.route("/", home);
+app.route("/", api);
 
 export default {
   port: process.env.PORT || 3000,

@@ -1,7 +1,9 @@
 {
   "name": "hono-api",
   "scripts": {
-    "dev": "bunx prisma db push && bunx prisma generate && bun run --hot src/index.ts"
+    "prisma": "bunx prisma db push && bunx prisma generate && bunx prisma migrate deploy",
+    "dev": "bun run --hot src/index.ts",
+    "deploy": "bun run src/index.ts"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.0",

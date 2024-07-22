@@ -1,0 +1,20 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, Linux, x64, vps-ovh]
+    environment:
+      name: ovhcloud
+      url: "http://vps-8510d443.vps.ovh.net/api"
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          sh deploy.sh
