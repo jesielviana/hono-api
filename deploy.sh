@@ -8,5 +8,5 @@ bun run prisma
 echo "copy env"
 cp .env.example  .env
 echo "Bun deploy"
-bun run deploy
+nohup bun run deploy &
 echo "finished!"
