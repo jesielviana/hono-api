@@ -1,3 +1,9 @@
+# API de Filmes
+
+## Tecnologias
+- HonoJS
+- PrismaORM
+
 To install dependencies:
 ```sh
 bun install
