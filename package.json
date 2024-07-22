@@ -1,7 +1,7 @@
 {
   "name": "hono-api",
   "scripts": {
-    "dev": "gitbun run --hot src/index.ts"
+    "dev": "bunx prisma db push && bunx prisma generate && bun run --hot src/index.ts"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.0",
