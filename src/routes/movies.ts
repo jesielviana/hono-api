@@ -1,18 +1,17 @@
-import { Hono } from "hono";
-import { Movie, PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Hono, Context } from "hono";
+import { Movie } from "@prisma/client";
+import prisma from "../config/prisma";
 
 type MovieCreateInput = Omit<Movie, "id">;
 
-export const moviesRoute = new Hono();
+const moviesRoute = new Hono();
 
-moviesRoute.get("/", async (c) => {
+moviesRoute.get("/", async (c: Context) => {
   const movies = await prisma.movie.findMany();
   return c.json(movies);
 });
 
-moviesRoute.get("/:id", async (c) => {
+moviesRoute.get("/:id{[0-9]+}", async (c) => {
   console.log(c.req.param("id"));
   let id = Number(c.req.param("id"));
   const movies = await prisma.movie.findUnique({
@@ -30,7 +29,7 @@ moviesRoute.post("/", async (c) => {
   return c.json(newMovie);
 });
 
-moviesRoute.put("/:id", async (c) => {
+moviesRoute.put("/:id{[0-9]+}", async (c) => {
   let id = Number(c.req.param("id"));
   const body = await c.req.json();
   const { title, description, releaseYear } = body;
@@ -42,7 +41,7 @@ moviesRoute.put("/:id", async (c) => {
   return c.json(movieUpdated);
 });
 
-moviesRoute.delete("/:id", async (c) => {
+moviesRoute.delete("/:id{[0-9]+}", async (c) => {
   let id = Number(c.req.param("id"));
   const movieDeleted = await prisma.movie.delete({
     where: {
@@ -51,3 +50,5 @@ moviesRoute.delete("/:id", async (c) => {
   });
   return c.json(movieDeleted);
 });
+
+export default moviesRoute;

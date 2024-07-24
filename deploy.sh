@@ -17,7 +17,6 @@ else
   # Se não houver processos, exibe uma mensagem informativa
   echo "Nenhum processo encontrado na porta 80."
 fi
-
 echo "Bun deploy"
 nohup bun run deploy &
 echo "finished!"
