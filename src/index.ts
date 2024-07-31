@@ -11,7 +11,7 @@ import swagger from "../swagger.json";
 const api = new Hono().basePath("/api");
 api.use(cors());
 api.use(logger());
-api.use(csrf());
+// api.use(csrf());
 api.use(secureHeaders());
 
 api.get("/", (c) => {
