@@ -5,9 +5,20 @@
     "version": "1.0.0",
     "description": "API para gerenciamento de filmes utilizadas nas disciplinas de desenvolvimento Web no IFPI Campus Picos"
   },
+  "tags": [
+    {
+      "name": "Movie",
+      "description": "Operações relacionadas a filmes"
+    },
+    {
+      "name": "User",
+      "description": "Operações relacionadas a usuários"
+    }
+  ],
   "paths": {
     "/api/movies": {
       "post": {
+        "tags": ["Movie"],
         "summary": "Adiciona um novo filme",
         "requestBody": {
           "required": true,
@@ -26,6 +37,7 @@
         }
       },
       "get": {
+        "tags": ["Movie"],
         "summary": "Retorna uma lista de todos os filmes",
         "responses": {
           "200": {
@@ -46,6 +58,7 @@
     },
     "/api/movies/{id}": {
       "get": {
+        "tags": ["Movie"],
         "summary": "Retorna um filme específico",
         "parameters": [
           {
@@ -74,6 +87,7 @@
         }
       },
       "put": {
+        "tags": ["Movie"],
         "summary": "Atualiza as informações de um filme",
         "parameters": [
           {
@@ -105,6 +119,7 @@
         }
       },
       "delete": {
+        "tags": ["Movie"],
         "summary": "Remove um filme",
         "parameters": [
           {
@@ -122,6 +137,123 @@
           },
           "404": {
             "description": "Filme não encontrado"
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Login de usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Retorna uma lista de todos os usuários",
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["User"],
+        "summary": "Adiciona um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso"
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Retorna um usuário específico",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário retornado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Remove um usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário removido com sucesso"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
           }
         }
       }
@@ -155,6 +287,42 @@
           }
         },
         "required": ["title", "description", "releaseYear"]
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "usuario@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "senha123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "email": {
+            "type": "string",
+            "example": "joao.silva@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "senha123"
+          }
+        },
+        "required": ["name", "email", "password"]
       }
     }
   }
