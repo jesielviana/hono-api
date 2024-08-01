@@ -1,7 +1,7 @@
 {
   "name": "hono-api",
   "scripts": {
-    "prisma": "bunx prisma generate && bunx prisma migrate deploy",
+    "prisma": "bunx prisma generate",
     "dev": "bun run --hot src/index.ts",
     "build": "bun install && bun run prisma",
     "deploy": "bun run src/index.ts"
