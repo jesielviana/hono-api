@@ -13,6 +13,7 @@ loginRoute.post("/", async (c: Context) => {
   if (!user) {
     return c.json({ message: "Usuário não encontrado" }, 400);
   }
+  console.log("password", password);
   const verify = Bun.password.verifySync(password, user.password);
   if (!verify) {
     return c.json({ message: "Senha inválida" }, 400);

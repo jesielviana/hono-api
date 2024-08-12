@@ -9,12 +9,12 @@ import swagger from "../swagger.json";
 import moviesRoute from "./routes/movies";
 import usersRoute from "./routes/users";
 import loginRoute from "./routes/login";
+import { HTTPResponseError } from "hono/types";
 
 const app = new Hono();
 app.use(cors());
 app.use(logger());
 app.use(secureHeaders());
-app.use("/auth/*", jwt({ secret: Bun.env.JWT_SECRET as string }));
 
 app.get("/auth/page", (c) => {
   console.log("You are authorized");
@@ -33,12 +33,13 @@ app.notFound((c) => {
 
 app.onError((err, c) => {
   console.error(`${err}`);
-  return c.text("Erro interno", 500);
+  return c.json({ message: err.message }, err.status || 500);
 });
 
-app.route("/api/movies", moviesRoute);
 app.route("/api/users", usersRoute);
 app.route("/api/login", loginRoute);
+app.use("/api/*", jwt({ secret: Bun.env.JWT_SECRET as string }));
+app.route("/api/movies", moviesRoute);
 
 export default {
   port: process.env.PORT || 3000,

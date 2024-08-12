@@ -23,7 +23,15 @@ moviesRoute.get("/:id{[0-9]+}", async (c) => {
 moviesRoute.post("/", async (c) => {
   const body = await c.req.json();
   const { title, description, releaseYear } = body;
-  const movie: MovieCreateInput = { title, description, releaseYear, updatedAt: new Date() };
+  const payload = c.get("jwtPayload");
+  console.log("payload", payload);
+  const movie: MovieCreateInput = {
+    title,
+    description,
+    releaseYear,
+    updatedAt: new Date(),
+    userId: payload.id,
+  };
   const newMovie = await prisma.movie.create({ data: movie });
   c.status(201);
   return c.json(newMovie);
@@ -33,7 +41,13 @@ moviesRoute.put("/:id{[0-9]+}", async (c) => {
   let id = Number(c.req.param("id"));
   const body = await c.req.json();
   const { title, description, releaseYear } = body;
-  const movie: Movie = { id, title, description, releaseYear, updatedAt: new Date() };
+  const movie: Movie = {
+    id,
+    title,
+    description,
+    releaseYear,
+    updatedAt: new Date(),
+  };
   const movieUpdated = await prisma.movie.update({
     where: { id },
     data: movie,
