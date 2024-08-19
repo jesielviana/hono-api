@@ -1,8 +1,6 @@
-import { Hono, Context } from "hono";
-import { Movie } from "@prisma/client";
+import { Movie, Prisma } from "@prisma/client";
 import prisma from "../config/prisma";
-
-type MovieCreateInput = Omit<Movie, "id">;
+import { Context, Hono } from "hono";
 
 const moviesRoute = new Hono();
 
@@ -25,7 +23,7 @@ moviesRoute.post("/", async (c) => {
   const { title, description, releaseYear } = body;
   const payload = c.get("jwtPayload");
   console.log("payload", payload);
-  const movie: MovieCreateInput = {
+  const movie: Prisma.MovieCreateInput = {
     title,
     description,
     releaseYear,
@@ -41,10 +39,8 @@ moviesRoute.put("/:id{[0-9]+}", async (c) => {
   let id = Number(c.req.param("id"));
   const body = await c.req.json();
   const { title, description, releaseYear } = body;
-  const movie: Movie = {
-    id,
+  const movie: Prisma.MovieUpdateInput = {
     title,
-    description,
     releaseYear,
     updatedAt: new Date(),
   };
