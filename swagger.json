@@ -3,7 +3,7 @@
   "info": {
     "title": "API de Filmes",
     "version": "1.0.0",
-    "description": "API para gerenciamento de filmes utilizadas nas disciplinas de desenvolvimento Web no IFPI Campus Picos"
+    "description": "Esta API oferece rotas públicas para login e gerenciamento de usuários, e rotas privadas para manipulação de filmes. Foi criada pelo Prof. Jesiel Viana do IFPI Campus Picos para fins didáticos, visando a integração e o aprendizado sobre APIs, autenticação e gerenciamento de usuários."
   },
   "tags": [
     {
