@@ -25,7 +25,7 @@ app.notFound((c) => {
 
 app.onError((err, c) => {
   console.error(`${err}`);
-  return c.json({ message: err.message }, err.status || 500);
+  return c.json({ message: err.message }, 500);
 });
 
 app.route("/api/users", usersRoute);

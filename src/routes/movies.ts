@@ -28,7 +28,7 @@ moviesRoute.post("/", async (c) => {
     description,
     releaseYear,
     updatedAt: new Date(),
-    userId: payload.id,
+    user: payload.id,
   };
   const newMovie = await prisma.movie.create({ data: movie });
   c.status(201);
