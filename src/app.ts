@@ -11,7 +11,6 @@ import loginRoute from "./routes/login";
 
 const app = new Hono();
 app.use(cors());
-app.use(logger());
 app.use(secureHeaders());
 
 app.get("/", swaggerUI({ url: "/doc" }));
@@ -33,7 +32,4 @@ app.route("/api/login", loginRoute);
 app.use("/api/*", jwt({ secret: Bun.env.JWT_SECRET as string }));
 app.route("/api/movies", moviesRoute);
 
-export default {
-  port: process.env.PORT || 3000,
-  fetch: app.fetch,
-};
+export default app;

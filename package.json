@@ -2,13 +2,15 @@
   "name": "hono-api",
   "scripts": {
     "prisma": "bunx prisma generate",
-    "dev": "bun run --hot src/index.ts",
+    "dev": "bun run --hot src/server.ts",
     "build": "bun install && bun run prisma",
-    "deploy": "bun run src/index.ts"
+    "deploy": "bun run src/server.ts",
+    "test": "env-cmd -f .env.test bunx prisma db push --force-reset && bun test"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.0",
     "@prisma/client": "^5.17.0",
+    "env-cmd": "^10.1.0",
     "hono": "^4.5.0"
   },
   "devDependencies": {
