@@ -9,12 +9,12 @@
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.0",
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^6.2.0",
     "env-cmd": "^10.1.0",
     "hono": "^4.5.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "prisma": "^5.17.0"
+    "prisma": "^6.2.0"
   }
 }

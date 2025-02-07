@@ -1,13 +1,16 @@
-import { Hono, Context } from "hono";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
+import { Context, Hono } from "hono";
 import prisma from "../config/prisma";
-
-type UserCreateInput = Omit<User, "id">;
+import UserRepostitory from "../repositories/UserRepostitory";
 
 const usersRoute = new Hono();
+const userRepostitory = new UserRepostitory(prisma);
 
 usersRoute.get("/", async (c: Context) => {
-  const users = await prisma.user.findMany();
+  const users = await userRepostitory.findAll();
+  // const users = await prisma.user.findMany({
+  //   omit: { password: true },
+  // });
   return c.json(users);
 });
 
@@ -23,8 +26,18 @@ usersRoute.get("/:id{[0-9]+}", async (c) => {
 usersRoute.post("/", async (c) => {
   const body = await c.req.json();
   const { name, email, password } = body;
+
+  const userByEmail = await prisma.user.findFirst({
+    where: { email },
+  });
+
+  if (userByEmail) {
+    c.status(400);
+    return c.json({});
+  }
+
   const cryptPassword = await Bun.password.hash(password);
-  const user: UserCreateInput = { name, email, password: cryptPassword };
+  const user: Prisma.UserCreateInput = { name, email, password: cryptPassword };
   const newUser = await prisma.user.create({ data: user });
   c.status(201);
   return c.json(newUser);
