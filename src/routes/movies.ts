@@ -1,6 +1,7 @@
-import { Movie, Prisma } from "@prisma/client";
-import prisma from "../config/prisma";
+import { Prisma } from "@prisma/client";
 import { Context, Hono } from "hono";
+import prisma from "../config/prisma";
+import { getLoggedUserId } from "../util/utils";
 
 const moviesRoute = new Hono();
 
@@ -38,13 +39,20 @@ moviesRoute.put("/:id{[0-9]+}", async (c) => {
   let id = Number(c.req.param("id"));
   const userLoggedId = getLoggedUserId(c);
   const body = await c.req.json();
-  const { title, description, releaseYear, userId } = body;
 
-  if (userLoggedId != userId) {
+  const { title, description, releaseYear } = body;
+
+  const movie = await prisma.movie.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (userLoggedId != movie?.userId) {
     c.status(401);
     return c.json({ message: "Unauthorized" });
   }
-  const movie: Prisma.MovieUpdateInput = {
+  const movieUpdateInput: Prisma.MovieUpdateInput = {
     title,
     description,
     releaseYear,
@@ -52,7 +60,7 @@ moviesRoute.put("/:id{[0-9]+}", async (c) => {
   };
   const movieUpdated = await prisma.movie.update({
     where: { id },
-    data: movie,
+    data: movieUpdateInput,
   });
   return c.json(movieUpdated);
 });
@@ -67,8 +75,6 @@ moviesRoute.delete("/:id{[0-9]+}", async (c) => {
   return c.json(movieDeleted);
 });
 
-function getLoggedUserId(c: Context) {
-  return c.get("jwtPayload").id;
-}
+
 
 export default moviesRoute;
