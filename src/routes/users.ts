@@ -8,19 +8,12 @@ const userRepostitory = new UserRepostitory(prisma);
 
 usersRoute.get("/", async (c: Context) => {
   const users = await userRepostitory.findAll();
-  // const users = await prisma.user.findMany({
-  //   omit: { password: true },
-  // });
   return c.json(users);
 });
 
 usersRoute.get("/:id{[0-9]+}", async (c) => {
   console.log(c.req.param("id"));
   let id = Number(c.req.param("id"));
-  // const user = await prisma.user.findUnique({
-  //   where: { id },
-  //   include: { movies: true },
-  // });
   const user = await userRepostitory.findById(id);
   return c.json(user);
 });
