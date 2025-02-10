@@ -24,7 +24,7 @@ model User {
   name     String
   email    String  @unique
   password String
-  Movie    Movie[]
+  movies   Movie[]
 
   @@map("users")
 }

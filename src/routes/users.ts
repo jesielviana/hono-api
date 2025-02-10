@@ -17,9 +17,11 @@ usersRoute.get("/", async (c: Context) => {
 usersRoute.get("/:id{[0-9]+}", async (c) => {
   console.log(c.req.param("id"));
   let id = Number(c.req.param("id"));
-  const user = await prisma.user.findUnique({
-    where: { id },
-  });
+  // const user = await prisma.user.findUnique({
+  //   where: { id },
+  //   include: { movies: true },
+  // });
+  const user = await userRepostitory.findById(id);
   return c.json(user);
 });
 

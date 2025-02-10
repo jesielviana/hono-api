@@ -1,8 +1,8 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { Movie, Prisma, PrismaClient, User } from "@prisma/client";
 
-type UserWithoutPass = Omit<User, "password">;
+type UserWithMovies = User & { movies: Movie[] };
 
-class UserRepostitory implements Repostiory<User, UserWithoutPass> {
+class UserRepostitory implements Repostiory<User> {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -21,14 +21,19 @@ class UserRepostitory implements Repostiory<User, UserWithoutPass> {
     throw new Error("Method not implemented.");
   }
 
-  findById(id: number): Promise<UserWithoutPass> {
-    throw new Error("Method not implemented.");
+  async findById(id: number): Promise<UserWithMovies | null> {
+    const user = (await this.prisma.user.findUnique({
+      where: { id },
+      include: { movies: true },
+      omit: { password: true },
+    })) as UserWithMovies;
+    return user;
   }
 
-  async findAll(): Promise<UserWithoutPass[]> {
-    const users = this.prisma.user.findMany({
+  async findAll(): Promise<User[]> {
+    const users = (await this.prisma.user.findMany({
       omit: { password: true },
-    });
+    })) as User[];
     return users;
   }
 }
